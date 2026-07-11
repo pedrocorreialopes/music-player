@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aurora Player — Sua Galeria de Música</title>
+<meta name="description" content="Aurora Player: reproduza, organize em playlists, baixe e explore sua galeria de músicas com um player moderno e elegante.">
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+
+<!-- JSZip para exportar playlists em .zip -->
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- Fundo decorativo animado -->
+<div class="bg-decor" aria-hidden="true">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+  <div class="noise-overlay"></div>
+</div>
+
+<div class="app-shell">
+
+  <!-- ===================== SIDEBAR ===================== -->
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-mark"><i class="fa-solid fa-wave-square"></i></div>
+      <div class="brand-text">
+        <span class="brand-name">Aurora<strong>Player</strong></span>
+        <span class="brand-tag">Sua galeria, sua trilha sonora</span>
+      </div>
+    </div>
+
+    <nav class="nav-menu" aria-label="Navegação principal">
+      <button class="nav-item active" data-view="home">
+        <i class="fa-solid fa-house"></i><span>Início</span>
+      </button>
+      <button class="nav-item" data-view="library">
+        <i class="fa-solid fa-record-vinyl"></i><span>Galeria</span>
+      </button>
+      <button class="nav-item" data-view="playlists">
+        <i class="fa-solid fa-list-music"></i><span>Playlists</span>
+      </button>
+      <button class="nav-item" data-view="favorites">
+        <i class="fa-solid fa-heart"></i><span>Favoritas</span>
+      </button>
+      <button class="nav-item" data-view="queue">
+        <i class="fa-solid fa-layer-group"></i><span>Fila de reprodução</span>
+      </button>
+    </nav>
+
+    <div class="sidebar-section">
+      <div class="sidebar-section-head">
+        <span>Minhas Playlists</span>
+        <button id="createPlaylistBtn" class="icon-btn small" title="Criar nova playlist" aria-label="Criar nova playlist">
+          <i class="fa-solid fa-plus"></i>
+        </button>
+      </div>
+      <ul class="playlist-list" id="playlistList"><!-- gerado via JS --></ul>
+    </div>
+
+    <div class="sidebar-footer">
+      <button id="uploadFolderBtn" class="ghost-btn">
+        <i class="fa-solid fa-folder-open"></i> Adicionar pasta local
+      </button>
+      <input type="file" id="folderInput" accept="audio/*" multiple hidden>
+    </div>
+  </aside>
+
+  <!-- ===================== MAIN ===================== -->
+  <div class="main-area">
+
+    <!-- Topbar -->
+    <header class="topbar">
+      <button class="icon-btn only-mobile" id="menuToggle" aria-label="Abrir menu">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+
+      <div class="search-box">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="search" id="searchInput" placeholder="Buscar por música, artista ou álbum...">
+      </div>
+
+      <div class="topbar-actions">
+        <button class="icon-btn" id="themeToggle" title="Alternar tema" aria-label="Alternar tema">
+          <i class="fa-solid fa-moon"></i>
+        </button>
+        <div class="user-chip">
+          <i class="fa-solid fa-user-circle"></i>
+          <span>Ouvinte</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Conteúdo rolável -->
+    <main class="content" id="content">
+
+      <!-- VIEW: HOME -->
+      <section class="view active" id="view-home">
+        <div class="hero">
+          <div class="hero-text">
+            <span class="hero-eyebrow">Boas-vindas</span>
+            <h1>Sinta cada faixa da sua <span class="grad-text">galeria</span>.</h1>
+            <p>Explore, organize em playlists e ouça no modo aleatório os arquivos de áudio hospedados na sua galeria — com download rápido e uma experiência visual encantadora.</p>
+            <div class="hero-actions">
+              <button class="btn-primary" id="playAllBtn"><i class="fa-solid fa-play"></i> Reproduzir tudo</button>
+              <button class="btn-ghost-lg" id="shuffleAllBtn"><i class="fa-solid fa-shuffle"></i> Modo aleatório</button>
+            </div>
+          </div>
+          <div class="hero-art">
+            <div class="hero-disc">
+              <img id="heroCover" src="images/cover-01.jpg" alt="Capa em destaque">
+              <div class="hero-disc-hole"></div>
+            </div>
+            <div class="hero-eq" aria-hidden="true">
+              <span></span><span></span><span></span><span></span><span></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-head">
+          <h2><i class="fa-solid fa-clock"></i> Adicionadas recentemente</h2>
+        </div>
+        <div class="track-grid" id="recentGrid"><!-- gerado via JS --></div>
+
+        <div class="section-head">
+          <h2><i class="fa-solid fa-users-rectangle"></i> Artistas na galeria</h2>
+        </div>
+        <div class="artist-row" id="artistRow"><!-- gerado via JS --></div>
+      </section>
+
+      <!-- VIEW: LIBRARY (galeria completa) -->
+      <section class="view" id="view-library">
+        <div class="section-head">
+          <h2><i class="fa-solid fa-record-vinyl"></i> Galeria completa</h2>
+          <div class="head-tools">
+            <select id="sortSelect" class="select-tool" aria-label="Ordenar por">
+              <option value="title">Título (A–Z)</option>
+              <option value="artist">Artista (A–Z)</option>
+              <option value="year">Ano (recente)</option>
+            </select>
+          </div>
+        </div>
+        <div class="track-table" id="libraryTable" role="table" aria-label="Lista de faixas da galeria">
+          <!-- gerado via JS -->
+        </div>
+      </section>
+
+      <!-- VIEW: PLAYLISTS -->
+      <section class="view" id="view-playlists">
+        <div class="section-head">
+          <h2><i class="fa-solid fa-list-music"></i> Minhas playlists</h2>
+          <button class="btn-primary sm" id="newPlaylistBtn2"><i class="fa-solid fa-plus"></i> Nova playlist</button>
+        </div>
+        <div class="playlist-grid" id="playlistGrid"><!-- gerado via JS --></div>
+
+        <div class="playlist-detail" id="playlistDetail" hidden>
+          <div class="section-head">
+            <button class="icon-btn" id="backToPlaylists" aria-label="Voltar"><i class="fa-solid fa-arrow-left"></i></button>
+            <h2 id="playlistDetailTitle">Playlist</h2>
+            <div class="head-tools">
+              <button class="btn-ghost sm" id="playPlaylistBtn"><i class="fa-solid fa-play"></i> Reproduzir</button>
+              <button class="btn-ghost sm" id="downloadPlaylistBtn"><i class="fa-solid fa-download"></i> Baixar tudo (.zip)</button>
+              <button class="btn-ghost sm danger" id="deletePlaylistBtn"><i class="fa-solid fa-trash"></i> Excluir</button>
+            </div>
+          </div>
+          <div class="track-table" id="playlistDetailTable"><!-- gerado via JS --></div>
+        </div>
+      </section>
+
+      <!-- VIEW: FAVORITES -->
+      <section class="view" id="view-favorites">
+        <div class="section-head">
+          <h2><i class="fa-solid fa-heart"></i> Faixas favoritas</h2>
+        </div>
+        <div class="track-table" id="favoritesTable"><!-- gerado via JS --></div>
+      </section>
+
+      <!-- VIEW: QUEUE -->
+      <section class="view" id="view-queue">
+        <div class="section-head">
+          <h2><i class="fa-solid fa-layer-group"></i> Fila de reprodução</h2>
+          <button class="btn-ghost sm" id="clearQueueBtn"><i class="fa-solid fa-broom"></i> Limpar fila</button>
+        </div>
+        <div class="track-table" id="queueTable"><!-- gerado via JS --></div>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<!-- ===================== PLAYER BAR ===================== -->
+<footer class="player-bar" id="playerBar">
+  <div class="player-track-info">
+    <div class="player-cover-wrap">
+      <img id="playerCover" src="images/cover-01.jpg" alt="Capa da faixa atual" class="player-cover">
+      <div class="spin-ring" id="spinRing"></div>
+    </div>
+    <div class="player-meta">
+      <span class="player-title" id="playerTitle">Selecione uma faixa</span>
+      <span class="player-artist" id="playerArtist">—</span>
+    </div>
+    <button class="icon-btn like-btn" id="likeBtn" title="Favoritar" aria-label="Favoritar faixa atual">
+      <i class="fa-regular fa-heart"></i>
+    </button>
+  </div>
+
+  <div class="player-center">
+    <div class="player-controls">
+      <button class="icon-btn" id="shuffleBtn" title="Aleatório" aria-label="Ativar modo aleatório">
+        <i class="fa-solid fa-shuffle"></i>
+      </button>
+      <button class="icon-btn" id="prevBtn" title="Anterior" aria-label="Faixa anterior">
+        <i class="fa-solid fa-backward-step"></i>
+      </button>
+      <button class="icon-btn play-btn" id="playBtn" title="Reproduzir/Pausar" aria-label="Reproduzir ou pausar">
+        <i class="fa-solid fa-play"></i>
+      </button>
+      <button class="icon-btn" id="nextBtn" title="Próxima" aria-label="Próxima faixa">
+        <i class="fa-solid fa-forward-step"></i>
+      </button>
+      <button class="icon-btn" id="repeatBtn" title="Repetir" aria-label="Alternar modo de repetição">
+        <i class="fa-solid fa-repeat"></i>
+      </button>
+    </div>
+    <div class="progress-row">
+      <span class="time-label" id="currentTime">0:00</span>
+      <div class="progress-bar" id="progressBar">
+        <div class="progress-fill" id="progressFill"></div>
+        <div class="progress-handle" id="progressHandle"></div>
+      </div>
+      <span class="time-label" id="durationTime">0:00</span>
+    </div>
+  </div>
+
+  <div class="player-extra">
+    <div class="visualizer" id="visualizer" aria-hidden="true">
+      <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+    </div>
+    <button class="icon-btn" id="downloadBtn" title="Baixar faixa" aria-label="Baixar faixa atual">
+      <i class="fa-solid fa-download"></i>
+    </button>
+    <button class="icon-btn" id="addToPlaylistBtn" title="Adicionar à playlist" aria-label="Adicionar à playlist">
+      <i class="fa-solid fa-square-plus"></i>
+    </button>
+    <button class="icon-btn" id="queueBtn" title="Ver fila" aria-label="Ver fila de reprodução">
+      <i class="fa-solid fa-layer-group"></i>
+    </button>
+    <div class="volume-box">
+      <button class="icon-btn" id="muteBtn" title="Mudo" aria-label="Ativar/desativar som">
+        <i class="fa-solid fa-volume-high"></i>
+      </button>
+      <input type="range" id="volumeSlider" min="0" max="100" value="80" aria-label="Volume">
+    </div>
+  </div>
+</footer>
+
+<audio id="audioPlayer" preload="metadata"></audio>
+
+<!-- ===================== MODAL: Nova Playlist ===================== -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-head">
+      <h3 id="modalTitle">Criar nova playlist</h3>
+      <button class="icon-btn" id="closeModalBtn" aria-label="Fechar"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-body">
+      <label for="playlistNameInput">Nome da playlist</label>
+      <input type="text" id="playlistNameInput" placeholder="Ex.: Foco Total, Praia, Treino..." maxlength="40">
+    </div>
+    <div class="modal-actions">
+      <button class="btn-ghost" id="cancelModalBtn">Cancelar</button>
+      <button class="btn-primary" id="confirmModalBtn">Criar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== MODAL: Adicionar à playlist ===================== -->
+<div class="modal-overlay" id="addToPlaylistOverlay">
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="addModalTitle">
+    <div class="modal-head">
+      <h3 id="addModalTitle">Adicionar à playlist</h3>
+      <button class="icon-btn" id="closeAddModalBtn" aria-label="Fechar"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-body">
+      <ul class="modal-playlist-list" id="modalPlaylistList"><!-- gerado via JS --></ul>
+      <button class="ghost-btn" id="addNewFromModalBtn"><i class="fa-solid fa-plus"></i> Criar nova playlist</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast de notificação -->
+<div class="toast" id="toast"></div>
+
+<footer class="site-footer">
+  <p>Criado e desenvolvido por <strong>Pedro Correia Lopes Filho</strong>.</p>
+</footer>
+
+<script src="js/tracks.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
