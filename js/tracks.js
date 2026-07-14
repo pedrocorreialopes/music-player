@@ -77,7 +77,7 @@ const TRACKS = [
   },
   {
     id: "t08",
-    title: "Juntos Somos Um",
+    title: "Jesus Está Vivo",
     artist: "Pedro Correia",
     album: "Reflexões",
     genre: "Religioso",
