@@ -37,11 +37,11 @@ const TRACKS = [
   },
   {
     id: "t04",
-    title: "Deriva Abstrata",
-    artist: "Nightscape",
-    album: "Cidade Elétrica",
-    genre: "Downtempo",
-    year: 2023,
+    title: "Refúgio no Teu Coração",
+    artist: "Pedro Correia",
+    album: "Amor de Deus",
+    genre: "Católica",
+    year: 2026,
     cover: "images/cover-04.jpg",
     src: "audio/track-04.mp3"
   },
