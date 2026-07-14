@@ -83,6 +83,6 @@ const TRACKS = [
     genre: "Religioso",
     year: 2026,
     cover: "images/cover-08.jpg",
-    src: "audio/junto_somos_um.mp3"
+    src: "audio/track-08.mp3"
   }
 ];
