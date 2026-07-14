@@ -27,11 +27,11 @@ const TRACKS = [
   },
   {
     id: "t03",
-    title: "Pulso Cósmico",
-    artist: "Stellar Beats",
-    album: "Órbita",
-    genre: "Techno",
-    year: 2024,
+    title: "Quando Eu Só Tinha A Fé ",
+    artist: "Pedro Correia",
+    album: "Amor de Deus",
+    genre: "Catolica",
+    year: 2026,
     cover: "images/cover-03.jpg",
     src: "audio/track-03.mp3"
   },
