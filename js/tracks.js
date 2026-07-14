@@ -57,10 +57,10 @@ const TRACKS = [
   },
   {
     id: "t06",
-    title: "Frequência Noturna",
-    artist: "Violet Echo",
-    album: "Reflexos",
-    genre: "Chillwave",
+    title: "No Silêncio de Maria",
+    artist: "Pedro Correia",
+    album: "Amor de Deus",
+    genre: "Católico",
     year: 2024,
     cover: "images/cover-06.jpg",
     src: "audio/track-06.mp3"
