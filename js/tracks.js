@@ -67,11 +67,11 @@ const TRACKS = [
   },
   {
     id: "t07",
-    title: "Ritmo Psicodélico",
-    artist: "Stellar Beats",
-    album: "Órbita",
-    genre: "Progressive",
-    year: 2023,
+    title: "Diante da Tua Misericórdia",
+    artist: "Pedro Correia",
+    album: "Amor de Deus",
+    genre: "Católico",
+    year: 2026,
     cover: "images/cover-07.jpg",
     src: "audio/track-07.mp3"
   },
