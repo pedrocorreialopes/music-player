@@ -77,12 +77,12 @@ const TRACKS = [
   },
   {
     id: "t08",
-    title: "Vibrações Positivas",
-    artist: "Violet Echo",
-    album: "Reflexos",
-    genre: "Deep House",
-    year: 2022,
+    title: "Juntos Somos Um",
+    artist: "Pedro Correia",
+    album: "Reflexões",
+    genre: "Religioso",
+    year: 2026,
     cover: "images/cover-08.jpg",
-    src: "audio/track-08.mp3"
+    src: "audio/junto_somos_um.mp3"
   }
 ];
