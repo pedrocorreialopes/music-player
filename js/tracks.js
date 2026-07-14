@@ -47,11 +47,11 @@ const TRACKS = [
   },
   {
     id: "t05",
-    title: "Sinfonia Vibrante",
-    artist: "Aurora Collective",
-    album: "Horizontes",
-    genre: "Ambient",
-    year: 2022,
+    title: "Teu Amor Me Levantou",
+    artist: "Pedro Correia",
+    album: "Amor de Deus",
+    genre: "Católica",
+    year: 2026,
     cover: "images/cover-05.jpg",
     src: "audio/track-05.mp3"
   },
