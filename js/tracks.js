@@ -17,11 +17,11 @@ const TRACKS = [
   },
   {
     id: "t02",
-    title: "Ondas de Néon",
-    artist: "Nightscape",
-    album: "Cidade Elétrica",
-    genre: "Synthwave",
-    year: 2023,
+    title: "Silêncio no Deserto",
+    artist: "Pedro Correia",
+    album: "Amor de Deus",
+    genre: "Católico",
+    year: 2026,
     cover: "images/cover-02.jpg",
     src: "audio/track-02.mp3"
   },
