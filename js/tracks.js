@@ -7,11 +7,11 @@
 const TRACKS = [
   {
     id: "t01",
-    title: "Amanhecer Digital",
-    artist: "Aurora Collective",
-    album: "Horizontes",
-    genre: "Eletrônica",
-    year: 2024,
+    title: "Mistério de Amor",
+    artist: "Pedro Correia",
+    album: "Amor de Deus",
+    genre: "Católica",
+    year: 2026,
     cover: "images/cover-01.jpg",
     src: "audio/track-01.mp3"
   },
